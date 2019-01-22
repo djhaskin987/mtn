@@ -61,15 +61,15 @@ which itself consists of a table column name header followed by rows containing
 primitive values as described above.
 
 Each line in the table represents a table row. Within each row, table cells are
-separated by the tab character (`\t`). Each row is ended by a single newline
-character (`\n`). Literal tab characters cannot be escaped and are disallowed
-within the value of a cell in the row of a table.  Empty cells -- that is,
-cells which do not have characters in them -- are disallowed. You cannot have a
-tab character followed directly by another tab character or newline character
-in an attempt to specify a "zero" or "null" cell. It also is an error for rows
-within a table to have fewer or more cells than that of other rows in the
-table; all rows must have the same number of columns. All tables must have at
-least one column.
+separated by one or more consecutive tab characters (`\t`). Each row is ended
+by a single newline character (`\n`). Literal tab characters cannot be escaped
+and are disallowed within the value of a cell in the row of a table.  Empty
+cells -- that is, cells which do not have characters in them -- are disallowed.
+You cannot have a tab character followed directly by another tab character or
+newline character in an attempt to specify a "zero" or "null" cell. It also is
+an error for rows within a table to have fewer or more cells than that of other
+rows in the table; all rows must have the same number of columns. All tables
+must have at least one column.
 
 Each column in the table has an associated name and type. The data within all
 cells in a single column must and do share the same type.
@@ -126,11 +126,11 @@ Meta-Data: for tables!
 
 # Because the parser is supposed to throw these comments away as if they
 # never existed.
-number	string	boolean
-primary_key	name	is_disabled
-1	Woof Woof	false
-2	Bark Bark	false
-3	?	?
+number			string		boolean
+primary_key	name			is_disabled
+1	          Woof Woof	false
+2						Bark Bark	false
+3						?					?
 
 customer_locations
 Parent-Table: customers
@@ -206,6 +206,8 @@ easy for computers to unambiguously deserialize.
 
 Future Possibilities
 ====================
+
+*JSON to MTN MAPPING*
 
 I think if the right metadata table headers were standardized, and used to
 decorate all the tables within a document, a 1-1 mapping could be established
