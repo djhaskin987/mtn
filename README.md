@@ -126,20 +126,20 @@ Meta-Data: for tables!
 
 # Because the parser is supposed to throw these comments away as if they
 # never existed.
-number			string		boolean
-primary_key	name			is_disabled
-1	          Woof Woof	false
-2						Bark Bark	false
-3						?					?
+number		string		boolean
+primary_key	name		is_disabled
+1		Woof Woof	false
+2		Bark Bark	false
+3		?		?
 
 customer_locations
 Parent-Table: customers
 
-number	number	string
+number		number		string
 primary_key	foreign_key	address
-1	1	100 Hollywood Way
-2	1	102 Hollywood Way
-3	2	89 Bark Ct
+1		1		100 Hollywood Way
+2		1		102 Hollywood Way
+3		2		89 Bark Ct
 
 
 ```
@@ -157,6 +157,11 @@ header is not part of the MTN standard, it's just listed here as an example
 piece of metadata). It uses foreign and primary keys (although again those
 aren't strictly part of the MTN standard) to link address information
 to customers.
+
+Note, because empty cells are disallowed, multiple tab characters
+can count the same as if one tab character was present. This means
+a variable number of tab characters as desired can be used to separate cells
+within a row, allowing us to line up table contents to look nicer.
 
 Motivation
 ==========
