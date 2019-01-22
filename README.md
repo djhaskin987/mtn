@@ -121,7 +121,8 @@ customers
 My-Header: something
 Meta-Data: for tables!
 # WHERE EVER
-# But I still have to separate the next table and this one with a blank newline
+# But I still have to separate the table portion below from the headers above
+# with a single blank line, found below
 
 # Because the parser is supposed to throw these comments away as if they
 # never existed.
