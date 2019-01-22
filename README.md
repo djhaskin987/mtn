@@ -204,6 +204,17 @@ I have to give someone a SQL dump. Surely there's a better way to write
 a table down in a way that's easier for humans to understand, but still
 easy for computers to unambiguously deserialize.
 
+Future Possibilities
+====================
+
+I think if the right metadata table headers were standardized, and used to
+decorate all the tables within a document, a 1-1 mapping could be established
+between a JSON/YAML document and an MTN document. All the advantages of having
+line-based parsing could then be achieved, while still presenting nested
+structured data to the user of the serialization library. This could be
+exploited to, I don't know, maybe make an RPC format that that is as easy to
+work with in typed languages as in untyped languages.
+
 Is This Even Useful
 ===================
 
