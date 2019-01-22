@@ -35,8 +35,13 @@ backslash on deserialization. This means that if you want to have a string that
 is simply the question mark but you do not want to have it interpreted by MTN
 as null, you can escape it: `\?`. (Note, if the string consists of more than
 one single question mark character, no question mark in that string need be
-escaped. It only needs escaped if the string is literally `?`.) As usual, to
-actually have a backslash character in a string, simply escape that, too: `\\`.
+escaped. It only needs escaped if the string is literally `?`.) Similarly,
+If the first column of a table is a string, and the first letter of a string in
+that column is a hash character (`#`), it would need to be escaped, too, like
+this: `\#`. As usual, to put a literal backslash character in strings, escape
+that as well: `\\`.
+
+
 Strings need not start or end with quotation marks, since everything is tab
 delimited anyway. If quotation marks are in the cell, they will be counted as
 part of the string. Quotation marks need not be backslash escaped.
