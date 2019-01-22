@@ -54,11 +54,9 @@ Tables
 ======
 
 MTN encodes multiple tables using plain text printable unicode characters.
-Tables consist of a name, table header values, a table column type header
-followed by a plain old [TSV
-table](https://www.iana.org/assignments/media-types/text/tab-separated-values),
-which itself consists of a table column name header followed by rows containing
-primitive values as described above.
+Tables consist of a name, table header values, a table column type header,
+a table column name header, and rows containing primitive values as described
+above.
 
 Each line in the table represents a table row. Within each row, table cells are
 separated by one or more consecutive tab characters (`\t`). Each row is ended
