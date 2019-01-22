@@ -2,10 +2,11 @@ Multiple Table Notation
 -----------------------
 
 Mutliple Table Notation is a format for communicating multiple tables at once
-in a single file or transmission. It is abbreviated MTN. This abbreviation may
-be pronounced "mountain", or at least that's how I like to pronounce it. That's
-because in the english language "mtn" is a way to abbreviate the word
-"mountain", and also because I live in Utah where there are lots of mountains.
+using unicode text in a single file or transmission. It is abbreviated MTN.
+This abbreviation may be pronounced "mountain", or at least that's how I like
+to pronounce it. That's because in the english language "mtn" is a way to
+abbreviate the word "mountain", and also because I live in Utah where there are
+lots of mountains.
 
 Comments
 ========
@@ -24,7 +25,7 @@ and null; however, the notation for these is slightly different than in JSON.
 
 Null is specified in MTN using a single question mark character (`?`).
 
-Boolean values are listed the same as in json (`true` and `false`).
+Boolean values are listed the same as in JSON (`true` and `false`).
 
 Strings are represented as simply a string of characters. Backslash escaping is
 supported, so that upon deserialization, the sequence `\n` translates to a
@@ -40,32 +41,35 @@ Strings need not start or end with quotation marks, since everything is tab
 delimited anyway. If quotation marks are in the cell, they will be counted as
 part of the string. Quotation marks need not be backslash escaped.
 
-Numbers are represented exactly the same in MTN as in JSON, and must conform
-to this regex:
+Numbers are represented exactly the same in MTN as in JSON. Therefore, they
+must conform to this regular expression:
 ```
     ^-?(0|[1-9][0-9]+)(\.[0-9]+)?([Ee][+-]?[0-9]+)?$
 ```
 
 Where any primitive value is expected, a null value (`?`) may be used instead
-without fear of error.
+within a transmission.
 
 Tables
 ======
 
-MTN encodes multiple tables using plain text printable characters. Tables
-consist of a name, table header values, and table column type header followed
-by a plain ol' TSV table containing primitive values as described above.
+MTN encodes multiple tables using plain text printable unicode characters.
+Tables consist of a name, table header values, a table column type header
+followed by a plain old [TSV
+table](https://www.iana.org/assignments/media-types/text/tab-separated-values),
+which itself consists of a table column name header followed by rows containing
+primitive values as described above.
 
-Each line in the table represents a table row. Within each row, table cells
-are separated by the tab character (`\t`). Each row is ended by a single
-newline character (`\n`). Literal tab characters cannot be escaped and are
-disallowed within the value of a cell in the row of a table.  Empty cells --
-that is, cells which do not have characters in them -- are disallowed. You
-cannot have a tab character followed directly by another tab character or
-newline character in an attempt to specify a "zero" or "null" cell. It is an
-error for rows within a table to have fewer or more cells than that of other
-rows in the table; all rows must have the same number of columns. All tables
-must have at least one column.
+Each line in the table represents a table row. Within each row, table cells are
+separated by the tab character (`\t`). Each row is ended by a single newline
+character (`\n`). Literal tab characters cannot be escaped and are disallowed
+within the value of a cell in the row of a table.  Empty cells -- that is,
+cells which do not have characters in them -- are disallowed. You cannot have a
+tab character followed directly by another tab character or newline character
+in an attempt to specify a "zero" or "null" cell. It also is an error for rows
+within a table to have fewer or more cells than that of other rows in the
+table; all rows must have the same number of columns. All tables must have at
+least one column.
 
 Each column in the table has an associated name and type. The data within all
 cells in a single column must and do share the same type.
@@ -95,7 +99,10 @@ Transmissions
 =============
 
 A *transmission* is a single unit of serialization. It is a collection of
-tables which in some sense don't make sense in isolation.
+tables which in some sense don't make sense in isolation. This is also referred
+to as an MTN document. The expectation is that this will typically take the
+form of a file or a literal transmission over HTTP or some other protocol
+between different computers.
 
 Each transmission consists of a series of zero or more tables in the format
 as described above. As stated above, tables are separated by two consecutive
@@ -136,14 +143,12 @@ primary_key	foreign_key	address
 
 ```
 
-It has comments, everything.
-
 It lists two tables, the `customers` table
 and the `customer_locations` table. The first table lists three columns
-and some not-so-interesting metadata. It has three rows. Note, MTN gives us
-everything we need to list primary and foreign keys if we want, just like
-we can in SQL databases. The third row has null values listed in all rows
-except the column named `primary_key`.
+and some not-so-interesting metadata. It has three rows and three columns.
+Note, MTN gives us everything we need to list primary and foreign keys if we
+want, just like we can in SQL databases. The third row has null values listed
+in all rows except the column named `primary_key`.
 
 The second table is named `customer_locations`. It has metadata sugesting it is
 somehow related to the `customers` table in its metadata. (This `Parent-Table`
@@ -156,9 +161,9 @@ Motivation
 ==========
 
 I wanted to create a table format that could effectively carry all of the
-information that might be contained in a JSON or YAML document, but in tabular
-form. Tabular form, I feel, is a more flexible format and translates into the
-typed languages more easily.
+information that might be contained in a [JSON](http://json.org/) or
+[YAML](https://yaml.org/) document, but in tabular form. Tabular form, I feel,
+is a more flexible format and translates into the typed languages more easily.
 
 While we are on the subject of typed languages, I wanted to create a notation
 that keeps typed languages and polymorphism in mind while also being easy to
@@ -173,20 +178,25 @@ the data should be parsed. This is a sort of polymorphism in serialization.
 The idea that you can "stop parsing" data halfway between and parse that data
 differently based on the data you have already parsed is a powerful idea. It's
 why HTTP API's are so prevalent, while JSON RPC APIs are not. JSON makes you
-parse the whole thing all at once, while HTTP lets you parse the endpoint, HTTP
-verb and headers before you parse the body of the request, allowing you to
-pause or partition the deserialization of an HTTP request and parse the body
-based on what was given as the endpoint, verb or even headers. While both are
-pretty easy from a language like python, being able to deserialize part of the
-data and leaving the rest unparsed comes pretty handy in a typed language
-setting.
+parse the whole document all at once, while HTTP lets you parse the endpoint,
+HTTP verb and headers before you parse the body of the request. This allows you
+to pause or partition the deserialization of an HTTP request and parse the body
+based on what was given as the endpoint, verb or even headers. While this
+ability or the lack therefo is less of a bother in a language like
+[Python](https://www.python.org/), being able to deserialize part of the data
+and leaving the rest unparsed comes pretty handy in a typed language setting.
 
-When I studied the differences between the two, I saw that the mechanism by
-which an HTTP request could be partially parsed was that it was a line-based
-serialization format, revolving around newline characters. For example,
-newlines separate each header from each other and from the `VERB /endpoint`
-line, and two newline characters together separate those lines from the body.
-This makes pausing during deserialization super simple.
+On the other side, I wanted to provide a small amount of type data in the
+standard itself so that dynamically typed languages would still be able to
+intelligently deserialize the data and consume it easily as well, just like how
+they do with JSON.
+
+When I studied the differences between the HTTP request and the JSON document,
+I saw that the mechanism by which an HTTP request could be partially parsed was
+that it was a line-based serialization format, revolving around newline
+characters. For example, newlines separate each header from each other and from
+the `VERB /endpoint` line, and two newline characters together separate those
+lines from the body.  This makes pausing during deserialization super simple.
 
 Also, I think it's a shame that in order to pass around table data using text,
 I have to give someone a SQL dump. Surely there's a better way to write
