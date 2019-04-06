@@ -109,8 +109,8 @@ customers
 # because the parser is supposed to throw these comments away as if they
 # never existed.
 primary_key	name	is_disabled
-1	'Woof 'Woof	false
-2	'Bark 'Bark	false
+1	'Woof Woof	false
+2	'Bark Bark	false
 3	null	null	null
 # But I still have to separate the table above below from the headers above
 # with a single blank line, found below
