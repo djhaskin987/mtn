@@ -111,7 +111,7 @@ customers
 primary_key	name	is_disabled
 1	'Woof Woof	false
 2	'Bark Bark	false
-3	null	null	null
+3	null	null
 # But I still have to separate the table above below from the headers above
 # with a single blank line, found below
 
