@@ -1,0 +1,19 @@
+# I can put comments wherever I want! It's just the comment
+# has to be all on the same line. no half-comment-half-data lines allowed.
+customers
+# WHERE EVER,
+# because the parser is supposed to throw these comments away as if they
+# never existed.
+primary_key	name	is_disabled
+1	'Woof Woof	false
+2	'Bark Bark	false
+3	null	null
+# But I still have to separate the table above below from the headers above
+# with a single blank line, found below
+
+customer_locations
+primary_key	foreign_key	address
+1	1	'100 Hollywood Way
+# Mid-data comment
+2	1	'102 Hollywood Way
+3	2	'89 Bark Ct
