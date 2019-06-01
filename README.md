@@ -1,5 +1,4 @@
-Multiple Table Notation, version 2.0.0
---------------------------------------
+Multiple Table Notation, version 2.0.0 --------------------------------------
 
 Multiple Table Notation is a format for communicating multiple tables at once
 using unicode text in a single file or transmission. It is abbreviated MTN.
@@ -23,14 +22,6 @@ as described below. As stated above, tables are separated by two consecutive
 newlines.  When three consecutive newlines are encountered, it means that no
 more tables follow and that the end of the transmission has been reached.
 
-Comments
-========
-
-In the first place, comments are supported. Comments are line-based. More
-precisely, any line within a transmission that starts with a `#` character
-and ends with a newline (`\n`) character is discarded upon serialization
-as if it had never been in the transmission in the first place.
-
 Tables
 ======
 
@@ -38,14 +29,14 @@ Tables consist of a name, a table header containing column names, and
 rows containing primitive values as described above.
 
 The first line contains a table name, which starts with an alphabetic character
-and may contain alphanumeric characters and the underscore character (`_`). At
-the end of the table name, a newline character is expected, ending the table
-name line.
+or underscore (`_`) and may contain alphanumeric characters and the underscore
+character (`_`). At the end of the table name, a newline character is expected,
+ending the table name line.
 
 The next line contains a table header. Each column in the table has an
 associated name and these names are found within the table header. They are
-separated from each other by a tab character and the line is ended with a
-newline. The column names follow the same format as the table name.
+separated from each other by one or more tab characters and the line is ended
+with a newline. The column names follow the same format as the table name.
 
 The next lines, if non-empty, constitute the rows within the table, one row per
 line. Each row contains several cells, with each cell containing data. Cells
@@ -60,35 +51,20 @@ rows in the table; all rows must have the same number of columns. All tables
 must have at least one column, but may contain zero rows.
 
 When two consecutive newline characters are encountered, this means that
-there is no more data in this table and a new table definition may follow.
-
-If three consecutive newline characters are encountered, this signifies
-the end of the transmission.
+there is no more data in this table and a new table definition will follow.
 
 Primitive Data Types within Cells
 =================================
 
-Any cell within a table row may contain data.
+Cells within a table row contain data.
 
 The types of atomic data supported by MTN are exactly the same as those
 primitive types which are supported by JSON: strings, numbers, boolean values,
-and null; however, the notation for these is slightly different than in JSON.
+and null; however, the notation for strings is slightly different than in JSON.
 
 Null is specified in MTN the same as in JSON by the string `null`.
 
 Boolean values are listed the same as in JSON (`true` and `false`).
-
-Strings are represented as simply a string of characters prefixed with a single
-quotation mark character (`'`). Backslash escaping is supported, so that upon
-deserialization, the sequence `\n` translates to a newline character and `\t`
-translates into a tab character. Any other character that is preceded by a
-backslash is simply printed literally without the backslash on deserialization.
-As usual, to actually have a backslash character in a string, simply escape
-that, too: `\\`. Nothing else need be escaped. In particular, single quote
-characters need not be escaped. For example, to specify a string consisting
-solely of a single quote character, prefix it with a single quote character as
-with any other string: `''`. This also means that the empty string is not empty
-but consists of a single single-quote character: `'`.
 
 Numbers are represented exactly the same in MTN as in JSON. Therefore, they
 must conform to this regular expression:
@@ -96,12 +72,37 @@ must conform to this regular expression:
     ^-?(0|[1-9][0-9]+)(\.[0-9]+)?([Ee][+-]?[0-9]+)?$
 ```
 
+Strings are represented as simply a string of characters prefixed with a single
+quotation mark character (`'`). Backslash escaping is supported, so that upon
+deserialization, the sequence `\n` translates to a newline character, `\r`
+translates to a carriage return character, `\t` translates into a tab
+character, and `\\` translates to a backslash. Nothing else need be escaped. In
+particular, single quote characters need not be escaped.  In particular, single
+and double quote characters need not be escaped. to specify a string consisting
+solely of a single quote character, prefix it with a single quote character as
+with any other string: `''`. This also means that the empty string is not empty
+but consists of a single single-quote character: `'`.
+
+Comments
+========
+
+Comments are supported. Comments are line-based. More precisely, any characters
+not within a string that start with a `#` character and ends with a newline
+(`\n`) character is discarded upon serialization as if it had never been in the
+transmission in the first place. (While this is what is allowed by the
+included anltr grammar, what is *intended* is that either the whole line is a
+comment or none of it is. Weird things start happening if this rule isn't
+followed, so let's just say that whole-line comments are the standard.)
+
 Example
 =======
 
 Here is a minimal valid MTN document:
 
 ```
+# vim: tabstop=8 shiftwidth=8 noexpandtab
+# -*- tab-width: 8; indent-tabs-mode: t; -*-
+#
 # I can put comments wherever I want! It's just the comment
 # has to be all on the same line. no half-comment-half-data lines allowed.
 customers
@@ -111,19 +112,18 @@ customers
 primary_key	name	is_disabled
 1	'Woof Woof	false
 2	'Bark Bark	false
-3	null	null
+3	null			null	null
 # But I still have to separate the table above below from the headers above
 # with a single blank line, found below
 
 customer_locations
 primary_key	foreign_key	address
-1	1	'100 Hollywood Way
+1		1		'100 Hollywood Way
 # Mid-data comment
-2	1	'102 Hollywood Way
-3	2	'89 Bark Ct
-# End with two blank lines!
-
-
+2		1		'102 Hollywood Way
+3		2		'89 Bark Ct
+4		3		'
+5		3		''
 ```
 It lists two tables, the `customers` table
 and the `customer_locations` table. The first table lists three columns.
@@ -169,10 +169,10 @@ I don't know, we'll see. At the moment it's just an idea I had.
 Changelog
 =========
 
-* Version 1.0.0:
-  * Initial version with the idea and focus of a line-based format
-    which could be used as some sort of RPC format.
-    (I now think that line-based RPC is best served by the HTTP standard.)
+* Version 2.1.0:
+  * Multiple consecutive tab characters allowed again because I can't make
+    up my mind, and also why not? If you want compliance, you can just use one.
+  * Antlr grammar and 'do-nothing' golang parser added, for fun
 
 * Version 2.0.0:
   * Strings prefixed with `'`
@@ -184,3 +184,11 @@ Changelog
   * Multiple consecutive tab characters are disallowed to conform with the
     [IANA TSV standard](https://www.iana.org/assignments/media-types/text/tab-separated-values)
   * Metadata (headers) removed
+
+* Version 1.0.0:
+  * Initial version with the idea and focus of a line-based format
+    which could be used as some sort of RPC format.
+    (I now think that line-based RPC is best served by the HTTP standard.)
+
+
+
