@@ -14,42 +14,64 @@ mtn_error
     ;
 
 mtn_tables
-    : table (TABLESEP table)*
+    : mtn_table (LF mtn_table)*
     ;
 
-TABLESEP
-   : LF LF
-   ;
 
-table
-    : tablename LF rowname (FIELDSEP rowname)* LF row+
+mtn_table
+    : mtn_tablename LF mtn_rowname (FIELDSEP mtn_rowname)* LF mtn_row+
     ;
 
-tablename
+mtn_tablename
     : IDENTIFIER
     ;
 
-rowname
+mtn_rowname
     : IDENTIFIER
+    ;
+
+mtn_row
+    : mtn_field (FIELDSEP mtn_field)* LF
+    ;
+
+mtn_field
+    : mtn_string
+    | mtn_number
+    | mtn_bool
+    | mtn_null
+    ;
+
+mtn_string
+    : STRING
+    ;
+
+mtn_number
+    : NUMBER
+    ;
+
+mtn_bool
+    : TRUE
+    | FALSE
+    ;
+
+mtn_null
+    : NULL
+    ;
+
+NULL
+    : 'null'
+    ;
+
+TRUE
+    : 'true'
+    ;
+
+FALSE
+    : 'false'
     ;
 
 IDENTIFIER
     : [\p{L}_] [\p{Alnum}_]*
-    ;
-
-row
-    : field (FIELDSEP field)* LF
-    ;
-
-FIELDSEP
-    : '\t' '\t'*
-    ;
-
-field
-    : STRING
-    | NUMBER
-    | BOOL
-    | NULL
     ;
 
 STRING
@@ -80,45 +102,36 @@ fragment GRAPHIC
     : [\p{Print}]
     ;
 
-NUMBER
-    : '-'? INT ('.' DIGITS )? EXP?
+FIELDSEP
+    : '\t' '\t'*
     ;
 
-fragment DIGITS
+LF
+    : EOL
+    ;
+
+COMMENT
+    : '#' ~[^\r\n]* EOL -> skip
+    ;
+
+fragment EOL
+    : '\r'? '\n'
+    ;
+
+NUMBER
+    : '-'? WHOLE ('.' FRAC )? EXP?
+    ;
+
+fragment FRAC
     : [0-9]+
     ;
 
-fragment INT
+fragment WHOLE
     : '0' | [1-9] [0-9]*
     ;
 
 fragment EXP
-    : [Ee] [+\-]? INT
-    ;
-
-COMMENT
-  : '#' ~ [^#\r\n] LF -> skip;
-
-
-BOOL
-    : TRUE
-    | FALSE
-    ;
-
-NULL
-    : 'n' 'u' 'l' 'l'
-    ;
-
-TRUE
-    : 't' 'r' 'u' 'e'
-    ;
-
-FALSE
-    : 'f' 'a' 'l' 's' 'e'
-    ;
-
-LF
-    : '\r'? '\n'
+    : [Ee] [+\-]? WHOLE
     ;
 
 BAD
