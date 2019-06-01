@@ -1,4 +1,5 @@
-Multiple Table Notation, version 2.0.0 --------------------------------------
+Multiple Table Notation, version 2.1.0
+--------------------------------------
 
 Multiple Table Notation is a format for communicating multiple tables at once
 using unicode text in a single file or transmission. It is abbreviated MTN.
