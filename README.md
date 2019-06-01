@@ -70,7 +70,7 @@ Boolean values are listed the same as in JSON (`true` and `false`).
 Numbers are represented exactly the same in MTN as in JSON. Therefore, they
 must conform to this regular expression:
 ```
-    ^-?(0|[1-9][0-9]+)(\.[0-9]+)?([Ee][+-]?[0-9]+)?$
+    ^-?+?(0|[1-9][0-9]+)(\.[0-9]+)?([Ee][+-]?(0|[1-9][0-9]+))?$
 ```
 
 Strings are represented as simply a string of characters prefixed with a single
