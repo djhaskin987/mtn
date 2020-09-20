@@ -41,7 +41,7 @@ with a newline. The column names follow the same format as the table name.
 
 The next lines, if non-empty, constitute the rows within the table, one row per
 line. Each row contains several cells, with each cell containing data. Cells
-are separated by a single tab character (`\t`). Each row is ended by a single
+are separated by one or more single characters (`\t`). Each row is ended by a single
 newline character (`\n`). Literal tab characters cannot be escaped and are
 disallowed within the value of a cell in the row of a table.  Empty cells --
 that is, cells which do not have characters in them -- are disallowed.  You
